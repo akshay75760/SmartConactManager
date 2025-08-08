@@ -23,6 +23,12 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
+    // Get users with contact count for admin dashboard
+    List<User> getAllUsersWithContactCount();
+    
+    // Get contact count for a specific user
+    Long getContactCountByUserId(String userId);
+
     // add more methods here related user service[logic]
 
 }

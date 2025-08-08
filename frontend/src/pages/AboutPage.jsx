@@ -14,6 +14,7 @@ const AboutPage = () => {
       <div className="mb-6">
         <h2 className="text-xl font-semibold">Developer</h2>
         <p className="mt-1">Name: Akshay Kumar</p>
+        <p className="mt-1">Name: Wasim Siddique</p>
         <p>Email: <a href="mailto:kakshay70007@gmail.com" className="text-blue-600 dark:text-blue-400 hover:underline">kakshay70007@gmail.com</a></p>
       </div>
 

@@ -14,6 +14,7 @@ const ContactPage = () => {
           <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-8">
             <div className="text-left space-y-4">
               <p><strong>Name:</strong> Akshay Kumar</p>
+              <p><strong>Name:</strong> Wasim Siddique</p>
               <p><strong>Email:</strong> <a href="mailto:kakshay70007@gmail.com" className="text-blue-600 dark:text-blue-400 hover:underline">kakshay70007@gmail.com</a></p>
               <p><strong>GitHub:</strong>
                 <a href="https://github.com/akshay75760" target="_blank" className="inline-flex items-center text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition">

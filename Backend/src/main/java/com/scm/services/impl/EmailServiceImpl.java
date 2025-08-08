@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -26,8 +27,11 @@ public class EmailServiceImpl implements EmailService {
     
     private static final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
     
-    @Autowired
+    @Autowired(required = false)
     private JavaMailSender mailSender;
+    
+    @Value("${spring.mail.host:}")
+    private String mailHost;
     
     @Autowired
     private MessageRepo messageRepo;
@@ -39,9 +43,40 @@ public class EmailServiceImpl implements EmailService {
     
     @Override
     public Message sendEmailWithAttachments(MessageForm messageForm, String senderEmail, MultipartFile[] attachments) {
-        logger.info("Attempting to send email from {} to {} with {} attachments", 
+        logger.info("🔵 Attempting to send email from {} to {} with {} attachments", 
                    senderEmail, messageForm.getRecipientEmail(), 
                    attachments != null ? attachments.length : 0);
+        
+        // Check if email configuration is available
+        if (mailSender == null || mailHost == null || mailHost.trim().isEmpty()) {
+            logger.warn("⚠️ Email service not configured - skipping email sending");
+            
+            // Still create and save message entity for testing purposes
+            Message message = new Message();
+            message.setId(UUID.randomUUID().toString());
+            message.setRecipientEmail(messageForm.getRecipientEmail());
+            message.setSubject(messageForm.getSubject());
+            message.setMessageBody(messageForm.getMessageBody());
+            message.setSenderEmail(senderEmail);
+            
+            // Store attachment file names if any
+            List<String> attachmentNames = new ArrayList<>();
+            if (attachments != null && attachments.length > 0) {
+                for (MultipartFile attachment : attachments) {
+                    if (!attachment.isEmpty()) {
+                        String filename = attachment.getOriginalFilename();
+                        if (filename != null && !filename.trim().isEmpty()) {
+                            attachmentNames.add(filename);
+                        }
+                    }
+                }
+                message.setAttachmentPaths(attachmentNames);
+            }
+            
+            Message savedMessage = messageRepo.save(message);
+            logger.info("✅ Message saved (SKIPPED_NO_CONFIG) due to missing email configuration");
+            return savedMessage;
+        }
         
         try {
             // Create Message entity
@@ -91,7 +126,7 @@ public class EmailServiceImpl implements EmailService {
                 }
             }
             
-            logger.info("Sending email with SMTP settings - Host: {}, Port: {}", 
+            logger.info("📧 Sending email with SMTP settings - Host: {}, Port: {}", 
                        "smtp.gmail.com", "587");
             
             mailSender.send(mimeMessage);
@@ -100,12 +135,12 @@ public class EmailServiceImpl implements EmailService {
             message.setSent(true);
             Message savedMessage = messageRepo.save(message);
             
-            logger.info("Email sent successfully to: {} with {} attachments", 
+            logger.info("✅ Email sent successfully to: {} with {} attachments", 
                        messageForm.getRecipientEmail(), attachmentNames.size());
             return savedMessage;
             
         } catch (MessagingException e) {
-            logger.error("Failed to create email message with attachments for: {}, Error details: {}", 
+            logger.error("❌ Failed to create email message with attachments for: {}, Error details: {}", 
                         messageForm.getRecipientEmail(), e.getMessage(), e);
             
             // Save message with sent = false for tracking failed attempts
@@ -122,7 +157,7 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException("Failed to create email message with attachments: " + e.getMessage(), e);
             
         } catch (Exception e) {
-            logger.error("Failed to send email to: {}, Error details: {}", 
+            logger.error("❌ Failed to send email to: {}, Error details: {}", 
                         messageForm.getRecipientEmail(), e.getMessage(), e);
             
             // Save message with sent = false for tracking failed attempts
@@ -134,8 +169,6 @@ public class EmailServiceImpl implements EmailService {
             message.setSenderEmail(senderEmail);
             message.setSent(false);
             
-            messageRepo.save(message);
-            
             // Provide more specific error messages
             String errorMessage = "Failed to send email";
             if (e.getMessage().contains("Authentication failed")) {
@@ -146,12 +179,25 @@ public class EmailServiceImpl implements EmailService {
                 errorMessage = "Invalid email address provided.";
             }
             
+            messageRepo.save(message);
+            
+            logger.error("🚨 Email sending failed - {}", errorMessage);
             throw new RuntimeException(errorMessage + " Details: " + e.getMessage(), e);
         }
     }
     
     @Override
     public boolean sendEmail(Message message) {
+        logger.info("🔵 Attempting to send simple email to: {}", message.getRecipientEmail());
+        
+        // Check if email configuration is available
+        if (mailSender == null || mailHost == null || mailHost.trim().isEmpty()) {
+            logger.warn("⚠️ Email service not configured - skipping email sending");
+            message.setSent(false);
+            messageRepo.save(message);
+            return false;
+        }
+        
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setTo(message.getRecipientEmail());
@@ -165,17 +211,27 @@ public class EmailServiceImpl implements EmailService {
             message.setSent(true);
             messageRepo.save(message);
             
-            logger.info("Email sent successfully to: {}", message.getRecipientEmail());
+            logger.info("✅ Email sent successfully to: {}", message.getRecipientEmail());
             return true;
             
         } catch (Exception e) {
-            logger.error("Failed to send email to: {}, Error: {}", message.getRecipientEmail(), e.getMessage());
+            logger.error("❌ Failed to send email to: {}, Error: {}", message.getRecipientEmail(), e.getMessage());
+            message.setSent(false);
+            messageRepo.save(message);
             return false;
         }
     }
     
     @Override
     public boolean sendSimpleEmail(String to, String subject, String text, String from) {
+        logger.info("🔵 Attempting to send simple email to: {}", to);
+        
+        // Check if email configuration is available
+        if (mailSender == null || mailHost == null || mailHost.trim().isEmpty()) {
+            logger.warn("⚠️ Email service not configured - skipping simple email sending");
+            return false;
+        }
+        
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setTo(to);
@@ -185,11 +241,11 @@ public class EmailServiceImpl implements EmailService {
             
             mailSender.send(mailMessage);
             
-            logger.info("Simple email sent successfully to: {}", to);
+            logger.info("✅ Simple email sent successfully to: {}", to);
             return true;
             
         } catch (Exception e) {
-            logger.error("Failed to send simple email to: {}, Error: {}", to, e.getMessage());
+            logger.error("❌ Failed to send simple email to: {}, Error: {}", to, e.getMessage());
             return false;
         }
     }

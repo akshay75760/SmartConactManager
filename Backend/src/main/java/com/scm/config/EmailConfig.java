@@ -3,6 +3,7 @@ package com.scm.config;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,20 +12,27 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @Configuration
 public class EmailConfig {
 
-    @Value("${spring.mail.host}")
+    @Value("${spring.mail.host:}")
     private String mailHost;
 
-    @Value("${spring.mail.port}")
+    @Value("${spring.mail.port:587}")
     private int mailPort;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.username:}")
     private String mailUsername;
 
-    @Value("${spring.mail.password}")
+    @Value("${spring.mail.password:}")
     private String mailPassword;
 
     @Bean
+    @ConditionalOnProperty(name = "spring.mail.host", havingValue = "", matchIfMissing = true)
     public JavaMailSender getJavaMailSender() {
+        // Only create JavaMailSender if email configuration is provided
+        if (mailHost == null || mailHost.trim().isEmpty()) {
+            // Return a dummy implementation that doesn't actually send emails
+            return new JavaMailSenderImpl(); // Will fail gracefully when trying to send
+        }
+        
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         
         mailSender.setHost(mailHost);

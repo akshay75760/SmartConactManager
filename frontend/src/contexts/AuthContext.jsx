@@ -68,13 +68,15 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify({
           email: response.data.email,
-          name: response.data.name
+          name: response.data.name,
+          roleList: response.data.roles || []
         }));
         
         setIsAuthenticated(true);
         setUser({
           email: response.data.email,
-          name: response.data.name
+          name: response.data.name,
+          roleList: response.data.roles || []
         });
         setLoading(false);
         return response.data; // Return response data on success
@@ -116,6 +118,13 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  // Update user method - used for profile updates
+  const updateUser = useCallback((updatedUserData) => {
+    console.log('🔄 Updating user data in context:', updatedUserData);
+    setUser(updatedUserData);
+    localStorage.setItem('user', JSON.stringify(updatedUserData));
+  }, []);
+
   const authContextValue = {
     isAuthenticated,
     user,
@@ -123,6 +132,7 @@ const AuthProvider = ({ children }) => {
     login,
     oauthLogin,
     logout,
+    updateUser,
   };
 
   return (

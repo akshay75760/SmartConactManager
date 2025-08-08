@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
@@ -14,9 +16,14 @@ import ContactsPage from './pages/user/ContactsPage';
 import UpdateContactPage from './pages/user/UpdateContactPage';
 import SearchContactsPage from './pages/user/SearchContactsPage';
 import DirectMessagePage from './pages/user/DirectMessagePage';
+import NotesPage from './pages/user/NotesPage';
+import AddEditNotePage from './pages/user/AddEditNotePage';
+import ExcelPage from './pages/user/ExcelPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import SuccessPage from './pages/SuccessPage';
 import ErrorPage from './pages/ErrorPage';
 import PrivateRoute from './components/common/PrivateRoute';
+import AdminRoute from './components/common/AdminRoute';
 import Navbar from './components/common/Navbar';
 import UserNavbar from './components/user/UserNavbar';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
@@ -61,6 +68,15 @@ function AppContent() {
             <Route path="/user/contacts/view/:contactId" element={<UpdateContactPage />} />
             <Route path="/user/contacts/search" element={<SearchContactsPage />} />
             <Route path="/user/direct-message" element={<DirectMessagePage />} />
+            <Route path="/user/notes" element={<NotesPage />} />
+            <Route path="/user/notes/add" element={<AddEditNotePage />} />
+            <Route path="/user/notes/edit/:noteId" element={<AddEditNotePage />} />
+            <Route path="/user/excel" element={<ExcelPage />} />
+          </Route>
+
+          {/* Admin Routes */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           </Route>
         </Routes>
       </main>
@@ -73,6 +89,18 @@ function App() {
     <Router>
       <AuthProvider>
         <AppContent />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </AuthProvider>
     </Router>
   );

@@ -1,5 +1,7 @@
 package com.scm.dto;
 
+import java.util.List;
+
 public class AuthResponse {
     
     private String token;
@@ -7,6 +9,7 @@ public class AuthResponse {
     private String email;
     private String name;
     private String message;
+    private List<String> roles;
     
     public AuthResponse() {}
     
@@ -21,6 +24,14 @@ public class AuthResponse {
         this.email = email;
         this.name = name;
         this.message = message;
+    }
+    
+    public AuthResponse(String token, String email, String name, String message, List<String> roles) {
+        this.token = token;
+        this.email = email;
+        this.name = name;
+        this.message = message;
+        this.roles = roles;
     }
     
     public String getToken() {
@@ -61,5 +72,13 @@ public class AuthResponse {
     
     public void setMessage(String message) {
         this.message = message;
+    }
+    
+    public List<String> getRoles() {
+        return roles;
+    }
+    
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }

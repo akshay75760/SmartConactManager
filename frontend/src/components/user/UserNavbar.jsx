@@ -127,6 +127,17 @@ const UserNavbar = ({ loggedInUser }) => {
                 Services
               </Link>
             </li>
+            {/* Admin Dashboard Link - Only show for admin users */}
+            {loggedInUser?.roleList?.includes('ROLE_ADMIN') && (
+              <li>
+                <Link
+                  to="/admin/dashboard"
+                  className="block py-2 px-3 md:p-0 text-purple-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-purple-800 md:dark:hover:text-purple-400 dark:text-purple-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-semibold"
+                >
+                  Admin Dashboard
+                </Link>
+              </li>
+            )}
             <li>
               <Link
                 to="/contact"

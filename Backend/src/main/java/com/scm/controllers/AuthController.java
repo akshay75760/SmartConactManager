@@ -86,7 +86,8 @@ public class AuthController {
                 jwt, 
                 user.getEmail(), 
                 user.getName(),
-                "Login successful"
+                "Login successful",
+                user.getRoleList()
             ));
 
         } catch (BadCredentialsException e) {

@@ -79,7 +79,7 @@ const HomePage = () => {
       {/* Footer Section */}
       <footer className="bg-gray-800 text-white py-8">
         <div className="container mx-auto text-center">
-          <p>&copy; 2024 Contact Manager. All rights reserved.</p>
+          <p>&copy; 2025 Contact Manager. All rights reserved.</p>
           <p>Follow us on <a href="#" className="text-blue-400">Facebook</a>, <a href="#" className="text-blue-400">Twitter</a>, and <a href="#" className="text-blue-400">Instagram</a>.</p>
         </div>
       </footer>

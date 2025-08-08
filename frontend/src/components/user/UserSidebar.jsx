@@ -52,7 +52,7 @@ const UserSidebar = ({ loggedInUser }) => {
           <ul className="space-y-2 font-medium">
             <li>
               <Link
-                to="/user/dashboard"
+                to="/user/notes"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
@@ -62,10 +62,11 @@ const UserSidebar = ({ loggedInUser }) => {
                   fill="currentColor"
                   viewBox="0 0 22 21"
                 >
+                  <path d="M3 3v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2zm2 2h12v10H5V5zm2 2v1h8V7H7zm0 3v1h8v-1H7zm0 3v1h5v-1H7z"/>
                   <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
                   <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                 </svg>
-                <span className="ms-3">Dashboard</span>
+                <span className="ms-3">My Notes</span>
               </Link>
             </li>
             <li>
@@ -84,6 +85,24 @@ const UserSidebar = ({ loggedInUser }) => {
                 </svg>
                 <span className="flex-1 ms-3 whitespace-nowrap"> Profile</span>
                 <span className="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-green-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Manage</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/user/notes/add"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M10 2a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H3a1 1 0 1 1 0-2h6V3a1 1 0 0 1 1-1z"/>
+                </svg>
+                <span className="flex-1 ms-3 whitespace-nowrap">Add Note</span>
+                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-green-800 bg-green-100 rounded-full dark:bg-green-900 dark:text-green-300">+</span>
               </Link>
             </li>
             <li>
@@ -107,6 +126,16 @@ const UserSidebar = ({ loggedInUser }) => {
             </li>
             <li>
               <Link
+                to="/user/excel"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+                <i className="fa-solid fa-file-excel h-5 w-5 text-green-600"></i>
+                <span className="flex-1 ms-3 whitespace-nowrap">Import/Export</span>
+                <span className="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-green-800 bg-green-100 rounded-full dark:bg-green-900 dark:text-green-300">Excel</span>
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/user/direct-message"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
@@ -122,6 +151,28 @@ const UserSidebar = ({ loggedInUser }) => {
                 <span className="flex-1 ms-3 whitespace-nowrap">Direct Message</span>
               </Link>
             </li>
+            
+            {/* Admin Dashboard Link - Only show for admin users */}
+            {loggedInUser?.roleList?.includes('ROLE_ADMIN') && (
+              <li>
+                <Link
+                  to="/admin/dashboard"
+                  className="flex items-center p-2 text-purple-700 rounded-lg dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/20 group font-semibold"
+                >
+                  <svg
+                    className="flex-shrink-0 w-5 h-5 text-purple-500 transition duration-75 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm4.5 14.5h-9a.5.5 0 0 1-.5-.5V6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5z"/>
+                  </svg>
+                  <span className="flex-1 ms-3 whitespace-nowrap">Admin Dashboard</span>
+                </Link>
+              </li>
+            )}
+            
             <li>
               <button
                 onClick={handleLogout}

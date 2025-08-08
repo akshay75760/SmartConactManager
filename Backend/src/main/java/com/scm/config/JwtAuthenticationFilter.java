@@ -43,6 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Check if Authorization header contains Bearer token
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
+            System.out.println("JWT token found: " + jwt);
             try {
                 username = jwtUtil.extractUsername(jwt);
                 logger.debug("JWT token found for user: {}", username);
