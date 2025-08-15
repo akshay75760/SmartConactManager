@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Contact Manager - User Activity Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .diagram-section {
+            margin-bottom: 50px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .diagram-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+        .diagram-content {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .mermaid {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #4facfe;
+        }
+        .feature-card h3 {
+            color: #2c3e50;
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+        }
+        .feature-card ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+        }
+        .feature-card li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👤 User Activity Diagram</h1>
+            <p>Smart Contact Manager - User Workflows and Interactions</p>
+        </div>
+        
+        <div class="content">
+            <!-- User Registration Flow -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    🔐 User Registration & Authentication Flow
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            A[User Visits Registration Page] --> B[Fill Registration Form]
+                            B --> C{Client Validation Valid?}
+                            C -->|No| D[Show Validation Errors]
+                            C -->|Yes| E[Submit to Server]
+                            E --> F{Server Validation Valid?}
+                            F -->|No| G[Show Server Errors]
+                            F -->|Yes| H[Hash Password]
+                            H --> I[Save User to Database]
+                            I --> J[Generate Verification Token]
+                            J --> K[Send Verification Email]
+                            K --> L[Show Success Message]
+                            L --> M[Redirect to Login]
+                            D --> B
+                            G --> B
+                            
+                            style A fill:#e1f5fe
+                            style L fill:#c8e6c9
+                            style M fill:#c8e6c9
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Login Flow -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    🚪 User Login Flow
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            A[Visit Login Page] --> B{Choose Login Method}
+                            B -->|Email/Password| C[Enter Credentials]
+                            B -->|Google OAuth| D[Google Authentication]
+                            B -->|GitHub OAuth| E[GitHub Authentication]
+                            
+                            C --> F{Validate Form}
+                            F -->|Valid| G[Submit to Server]
+                            F -->|Invalid| H[Show Form Errors]
+                            
+                            G --> I{Authentication Success?}
+                            I -->|Success| J[Generate JWT Token]
+                            I -->|Failed| K[Show Login Error]
+                            
+                            D --> L[Google OAuth Callback]
+                            E --> M[GitHub OAuth Callback]
+                            L --> N[Get User Profile]
+                            M --> N
+                            N --> O{User Exists?}
+                            O -->|Yes| P[Link Account]
+                            O -->|No| Q[Create New User]
+                            P --> J
+                            Q --> J
+                            
+                            J --> R[Set User Session]
+                            R --> S[Redirect to Dashboard]
+                            
+                            H --> C
+                            K --> C
+                            
+                            style A fill:#e1f5fe
+                            style S fill:#c8e6c9
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Dashboard -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    📊 User Dashboard Activity
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            A[Login Success] --> B[Load Dashboard]
+                            B --> C[Initialize Dashboard Data]
+                            C --> D[Display Dashboard Sections]
+                            D --> E{User Chooses Action}
+                            
+                            E -->|Manage Contacts| F[Navigate to Contacts]
+                            E -->|Manage Notes| G[Navigate to Notes]
+                            E -->|Update Profile| H[Navigate to Profile]
+                            E -->|Excel Operations| I[Navigate to Excel]
+                            E -->|View Messages| J[Navigate to Messages]
+                            E -->|Account Settings| K[Navigate to Settings]
+                            E -->|Logout| L[Logout Process]
+                            
+                            F --> M[Contact Management Flow]
+                            G --> N[Notes Management Flow]
+                            H --> O[Profile Management Flow]
+                            I --> P[Excel Operations Flow]
+                            J --> Q[Messages Flow]
+                            K --> R[Settings Flow]
+                            L --> S[End Session]
+                            
+                            M --> T{Continue or Return?}
+                            N --> T
+                            O --> T
+                            P --> T
+                            Q --> T
+                            R --> T
+                            
+                            T -->|Continue| E
+                            T -->|Return to Dashboard| D
+                            
+                            style A fill:#e1f5fe
+                            style D fill:#fff3e0
+                            style S fill:#ffcdd2
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Management -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    📞 Contact Management Workflow
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            A[Contacts Page] --> B{Choose Contact Action}
+                            
+                            B -->|View All| C[Load Contact List]
+                            B -->|Add New| D[Show Add Form]
+                            B -->|Search| E[Show Search Form]
+                            B -->|Filter| F[Show Filter Options]
+                            B -->|Export| G[Export Contacts]
+                            B -->|Import| H[Import Contacts]
+                            
+                            C --> I[Display Contacts with Pagination]
+                            I --> J{Select Contact Action}
+                            J -->|View| K[Show Contact Details]
+                            J -->|Edit| L[Show Edit Form]
+                            J -->|Delete| M[Confirm Deletion]
+                            J -->|Message| N[Compose Message]
+                            J -->|Call| O[Initiate Call]
+                            J -->|Email| P[Open Email Client]
+                            
+                            D --> Q[Fill Contact Form]
+                            Q --> R{Validate Data}
+                            R -->|Valid| S[Save Contact]
+                            R -->|Invalid| T[Show Errors]
+                            T --> Q
+                            S --> U[Success Message]
+                            
+                            E --> V[Enter Search Criteria]
+                            V --> W[Execute Search]
+                            W --> X[Display Results]
+                            
+                            F --> Y[Select Filter Criteria]
+                            Y --> Z[Apply Filter]
+                            Z --> AA[Display Filtered Results]
+                            
+                            G --> BB[Generate Excel File]
+                            BB --> CC[Download File]
+                            
+                            H --> DD[Upload Excel File]
+                            DD --> EE{Validate File}
+                            EE -->|Valid| FF[Import to Database]
+                            EE -->|Invalid| GG[Show Import Errors]
+                            FF --> HH[Import Success]
+                            
+                            style A fill:#e1f5fe
+                            style U fill:#c8e6c9
+                            style HH fill:#c8e6c9
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Management -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    👤 Profile Management Workflow
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            A[Profile Page] --> B[Load Current Profile]
+                            B --> C[Display Profile Information]
+                            C --> D{Choose Profile Action}
+                            
+                            D -->|Edit Basic Info| E[Enable Edit Mode]
+                            D -->|Change Password| F[Show Password Form]
+                            D -->|Update Picture| G[Show Upload Form]
+                            D -->|Email Settings| H[Show Email Preferences]
+                            D -->|Privacy Settings| I[Show Privacy Options]
+                            D -->|Account Security| J[Show Security Settings]
+                            
+                            E --> K[Update Profile Fields]
+                            K --> L{Validate Profile Data}
+                            L -->|Valid| M[Save Profile]
+                            L -->|Invalid| N[Show Validation Errors]
+                            N --> K
+                            M --> O[Success Message]
+                            
+                            F --> P[Enter Current & New Password]
+                            P --> Q{Validate Passwords}
+                            Q -->|Valid| R[Hash New Password]
+                            Q -->|Invalid| S[Show Password Errors]
+                            R --> T[Update Password in Database]
+                            T --> U[Password Success Message]
+                            S --> P
+                            
+                            G --> V[Select Image File]
+                            V --> W{Validate Image}
+                            W -->|Valid| X[Upload to Cloud]
+                            W -->|Invalid| Y[Show Image Errors]
+                            X --> Z[Get Image URL]
+                            Z --> AA[Update Profile Picture URL]
+                            AA --> BB[Picture Success Message]
+                            Y --> V
+                            
+                            H --> CC[Configure Email Preferences]
+                            CC --> DD[Save Email Settings]
+                            DD --> EE[Email Settings Success]
+                            
+                            I --> FF[Set Privacy Preferences]
+                            FF --> GG[Save Privacy Settings]
+                            GG --> HH[Privacy Settings Success]
+                            
+                            J --> II[Configure Security Settings]
+                            II --> JJ[Save Security Configuration]
+                            JJ --> KK[Security Settings Success]
+                            
+                            style A fill:#e1f5fe
+                            style O fill:#c8e6c9
+                            style U fill:#c8e6c9
+                            style BB fill:#c8e6c9
+                            style EE fill:#c8e6c9
+                            style HH fill:#c8e6c9
+                            style KK fill:#c8e6c9
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Features Grid -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🔐 Authentication Features</h3>
+                    <ul>
+                        <li>Email/Password Login</li>
+                        <li>Google OAuth Integration</li>
+                        <li>GitHub OAuth Integration</li>
+                        <li>Email Verification</li>
+                        <li>Password Reset</li>
+                        <li>Session Management</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>📞 Contact Management</h3>
+                    <ul>
+                        <li>Add/Edit/Delete Contacts</li>
+                        <li>Contact Search & Filtering</li>
+                        <li>Contact Categorization</li>
+                        <li>Profile Picture Upload</li>
+                        <li>Contact Communication</li>
+                        <li>Bulk Operations</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>📝 Notes Management</h3>
+                    <ul>
+                        <li>Create/Edit/Delete Notes</li>
+                        <li>Rich Text Editing</li>
+                        <li>Note Categories & Tags</li>
+                        <li>Note Search Functionality</li>
+                        <li>Favorite Notes</li>
+                        <li>Note Sharing</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>👤 Profile Management</h3>
+                    <ul>
+                        <li>Personal Information Update</li>
+                        <li>Password Change</li>
+                        <li>Profile Picture Upload</li>
+                        <li>Email Preferences</li>
+                        <li>Privacy Settings</li>
+                        <li>Account Security</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>📊 Excel Operations</h3>
+                    <ul>
+                        <li>Contact Data Import</li>
+                        <li>Contact Data Export</li>
+                        <li>Template Download</li>
+                        <li>Data Validation</li>
+                        <li>Import History</li>
+                        <li>Error Reporting</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🔒 Security Features</h3>
+                    <ul>
+                        <li>Session-based Authentication</li>
+                        <li>Data Encryption</li>
+                        <li>Input Validation</li>
+                        <li>XSS Protection</li>
+                        <li>CSRF Protection</li>
+                        <li>Rate Limiting</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

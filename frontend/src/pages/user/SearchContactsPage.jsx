@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import axios from '../../api/axiosConfig';
 import Swal from 'sweetalert2';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const SearchContactsPage = () => {
   const { user } = useAuth();
@@ -79,20 +80,52 @@ const SearchContactsPage = () => {
 
   const handleDeleteContact = async (id) => {
     Swal.fire({
-      title: 'Do you want to delete this contact?',
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Delete',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.get(`/user/contacts/delete/${id}`);
+          // Show loading toast
+          const loadingToast = toast.info('Deleting contact...', {
+            autoClose: false,
+            hideProgressBar: false,
+          });
+
+          const response = await axios.delete(`/user/contacts/delete/${id}`);
+          
+          // Close loading toast
+          toast.dismiss(loadingToast);
+          
+          // Show success message
+          toast.success(response.data.content || 'Contact deleted successfully!');
           setMessage({ content: 'Contact deleted successfully!', type: 'green' });
+          
           fetchContacts(pageInfo.page, pageInfo.size, pageInfo.sortBy, pageInfo.direction, searchForm.field, searchForm.value);
         } catch (error) {
           console.error('Error deleting contact:', error);
-          setMessage({ content: 'Failed to delete contact. Please try again.', type: 'red' });
+          
+          // Close loading toast if it exists
+          toast.dismiss();
+          
+          let errorMessage = 'Failed to delete contact. Please try again.';
+          if (error.response?.data?.content) {
+            errorMessage = error.response.data.content;
+          } else if (error.response?.status === 404) {
+            errorMessage = 'Contact not found.';
+          } else if (error.response?.status === 403) {
+            errorMessage = 'You do not have permission to delete this contact.';
+          } else if (error.response?.status === 401) {
+            errorMessage = 'Please log in to delete contacts.';
+          }
+          
+          toast.error(errorMessage);
+          setMessage({ content: errorMessage, type: 'red' });
         }
       }
     });

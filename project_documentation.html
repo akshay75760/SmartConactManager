@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Contact Manager - Project Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .container {
+            max-width: 960px;
+            margin: auto;
+            overflow: auto;
+            padding: 0 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .dependencies ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .dependencies li {
+            background: #f4f4f4;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Project Documentation: Smart Contact Manager</h1>
+
+        <div class="section">
+            <h2>1. Project Vision & Executive Summary</h2>
+            <p>
+                In a data-driven world, managing personal and professional contacts efficiently is paramount. The Smart Contact Manager (SCM) project was conceived to address the common challenge of scattered and disorganized contact information. The vision was to create a centralized, secure, and highly intuitive web application that serves as a single source of truth for a user's contacts. 
+            </p>
+            <p>
+                This application is not just a digital address book; it's a full-stack solution demonstrating modern software development practices. It combines a dynamic, responsive frontend built with <strong>React</strong> and a powerful, secure backend powered by <strong>Spring Boot</strong>. The project's architecture is designed to be scalable, maintainable, and robust, making it an ideal showcase of full-stack development capabilities.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>2. Core Features & Implementation Deep-Dive</h2>
+            <ul>
+                <li>
+                    <strong>Secure User Authentication & Authorization:</strong>
+                    <p>A robust, multi-faceted security system is the backbone of the application.</p>
+                    <ul>
+                        <li><strong>Backend:</strong> Implemented using <strong>Spring Security</strong>. User passwords are not stored in plaintext; they are securely hashed using the <strong>BCrypt password encoder</strong>. Upon successful login, the backend generates a <strong>JSON Web Token (JWT)</strong>, which is sent to the client. Every subsequent API request from the client must include this JWT in the Authorization header for access to protected resources.</li>
+                        <li><strong>Frontend:</strong> The JWT received from the backend is stored securely in the browser's local storage. An <strong>Axios interceptor</strong> is configured to automatically attach this token to every outgoing request, streamlining API communication without compromising security.</li>
+                        <li><strong>Social Login (OAuth2):</strong> To enhance user convenience, OAuth2-based login with providers like Google and GitHub is integrated. This leverages Spring Security's OAuth2 client support to handle the complex token exchange and user authentication flow seamlessly.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Dynamic Contact Management (CRUD):</strong>
+                    <p>The core functionality of the application allows users to manage their contacts effortlessly.</p>
+                    <ul>
+                        <li><strong>Backend:</strong> A comprehensive REST API provides endpoints for all CRUD operations (`/api/contacts`). The service layer contains the business logic, and <strong>Spring Data JPA</strong> repositories handle the database interactions, abstracting away boilerplate JDBC code. Data Transfer Objects (DTOs) are used to decouple the API layer from the database entities.</li>
+                        <li><strong>Frontend:</strong> The UI is built with reusable <strong>React components</strong>. Forms for adding and updating contacts use component-level state (`useState`) to manage user input. The `useEffect` hook is used to fetch contact data from the backend when a component mounts, ensuring the UI is always up-to-date.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Cloud-Based Image Handling:</strong>
+                    <p>Users can personalize contacts by uploading profile pictures.</p>
+                    <ul>
+                        <li>This feature is integrated with <strong>Cloudinary</strong>, a third-party cloud service for image and video management. On the frontend, a file input allows users to select an image. This image is then sent to the backend as part of a `multipart/form-data` request. The backend service handles the logic of uploading the file to Cloudinary and receives a public URL in return, which is then stored in the database against the contact's record.</li>
+                    </ul>
+                </li>
+                 <li>
+                    <strong>Modern & Responsive UI/UX:</strong>
+                     <p>The user interface is designed to be modern, intuitive, and accessible across devices.</p>
+                     <ul>
+                         <li>The frontend is built with <strong>React</strong> and bootstrapped with <strong>Vite</strong> for an exceptionally fast development server and optimized build process.</li>
+                         <li>Styling is handled by <strong>Tailwind CSS</strong>, a utility-first framework that allows for rapid development of custom designs without writing traditional CSS.</li>
+                         <li>Global state, such as the current user's authentication status and the selected UI theme (light/dark mode), is managed efficiently using <strong>React's Context API</strong>, avoiding the complexities of prop-drilling.</li>
+                     </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>3. Challenges Faced & Solutions</h2>
+            <ul>
+                <li>
+                    <strong>Challenge: Managing Global State Across Components.</strong>
+                    <p><strong>Problem:</strong> As the application grew, passing user authentication status and theme preferences down through multiple layers of components (prop-drilling) became cumbersome and led to tightly coupled, hard-to-maintain code.</p>
+                    <p><strong>Solution:</strong> I leveraged <strong>React's Context API</strong> to solve this. I created an `AuthContext` to hold the user's authentication state and a `ThemeContext` for the light/dark mode preference. By wrapping the main application component with these context providers, any component in the tree could easily access and consume this global state without props being passed down manually. This decoupled the components and significantly cleaned up the codebase.</p>
+                </li>
+                <li>
+                    <strong>Challenge: Securing the REST API and Communication Channel.</strong>
+                    <p><strong>Problem:</strong> It was critical to ensure that a user could only access their own contacts and that the API was protected from unauthorized access or malicious attacks like Cross-Site Request Forgery (CSRF).</p>
+                    <p><strong>Solution:</strong> I implemented a stateless authentication mechanism using <strong>JWT and Spring Security</strong>. After a user logs in, the server issues a signed JWT. This token is then required in the `Authorization` header for all subsequent requests to protected endpoints. Spring Security is configured to intercept each request, validate the JWT's signature and expiration, and load the user's security context. This approach is stateless, scalable, and prevents CSRF attacks by default since it doesn't rely on browser cookies for session management.</p>
+                </li>
+                <li>
+                    <strong>Challenge: Decoupling Long-Running Tasks from User Interaction.</strong>
+                    <p><strong>Problem:</strong> A planned feature was to allow users to import hundreds of contacts from an Excel file. Performing this operation synchronously in a web request would block the server thread, leading to a request timeout and a terrible user experience.</p>
+                    <p><strong>Solution:</strong> I architected a solution using a <strong>microservices pattern</strong>. I designed and scaffolded a separate `bulk-update-service` responsible solely for processing these Excel files. The main application would receive the uploaded file and publish a message to a <strong>RabbitMQ</strong> message queue. The microservice would listen for these messages, consume the file, process it asynchronously in the background, and update the database. This decouples the long-running task from the main application, ensuring the UI remains responsive and the system is more resilient and scalable.</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>4. Future Scope & Potential Enhancements</h2>
+            <ul>
+                <li><strong>Real-time Updates:</strong> Implement WebSockets to provide real-time notifications and updates across different user sessions or devices.</li>
+                <li><strong>Admin Dashboard:</strong> Develop a dedicated admin panel for managing users, viewing application statistics, and performing system-wide administrative tasks.</li>
+                <li><strong>Full Microservice Implementation:</strong> Complete the development and integration of the `bulk-update-service` for bulk import/export functionality.</li>
+                <li><strong>Advanced Search:</strong> Implement more advanced search capabilities, such as filtering by multiple fields or using a more powerful search engine like Elasticsearch.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Frontend</h2>
+            <h3>Implementation Details</h3>
+            <p>
+                The frontend is a single-page application (SPA) built using React. It utilizes React Router for navigation and Axios for communicating with the backend API. Styling is done with Tailwind CSS.
+            </p>
+            <h3>Dependencies</h3>
+            <div class="dependencies">
+                <ul>
+                    <li><code>react</code>: A JavaScript library for building user interfaces.</li>
+                    <li><code>react-dom</code>: Serves as the entry point to the DOM and server renderers for React.</li>
+                    <li><code>react-router-dom</code>: DOM bindings for React Router.</li>
+                    <li><code>axios</code>: Promise based HTTP client for the browser and node.js.</li>
+                    <li><code>tailwindcss</code>: A utility-first CSS framework for rapid UI development.</li>
+                    <li><code>postcss</code>: A tool for transforming CSS with JavaScript.</li>
+                    <li><code>autoprefixer</code>: A PostCSS plugin to parse CSS and add vendor prefixes to CSS rules.</li>
+                    <li><code>vite</code>: A build tool that aims to provide a faster and leaner development experience for modern web projects.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Backend (Smart-Contact-Manager)</h2>
+            <h3>Implementation Details</h3>
+            <p>
+                The backend is a monolithic application built with Spring Boot. It provides a REST API for the frontend and handles business logic and data persistence. Key features include user authentication with JWT, contact management, and integration with Cloudinary for image uploads.
+            </p>
+            <h3>Dependencies</h3>
+            <div class="dependencies">
+                <ul>
+                    <li><code>spring-boot-starter-data-jpa</code>: Starter for using Spring Data JPA with Hibernate.</li>
+                    <li><code>spring-boot-starter-web</code>: Starter for building web, including RESTful, applications using Spring MVC.</li>
+                    <li><code>spring-boot-starter-security</code>: Starter for using Spring Security.</li>
+                    <li><code>spring-boot-starter-oauth2-client</code>: Starter for using Spring Security's OAuth2/OpenID Connect client features.</li>
+                    <li><code>spring-boot-starter-thymeleaf</code>: Starter for building MVC web applications using Thymeleaf views.</li>
+                    <li><code>mysql-connector-j</code>: MySQL JDBC driver.</li>
+                    <li><code>jjwt-api</code>, <code>jjwt-impl</code>, <code>jjwt-jackson</code>: Java JWT: JSON Web Token for Java and Android.</li>
+                    <li><code>cloudinary-http45</code>: Cloudinary API for Java.</li>
+                    <li><code>spring-boot-starter-validation</code>: Starter for using Java Bean Validation with Hibernate Validator.</li>
+                    <li><code>google-api-client</code>: Google APIs Client Library for Java.</li>
+                    <li><code>org.apache.poi</code>: Apache POI for working with Microsoft Office documents.</li>
+                    <li><code>lombok</code>: A java library to spice up your java.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="section">
+        <h2>Diagrams</h2>
+        <p>
+            The following diagrams provide a visual representation of the system architecture and design.
+        </p>
+        <ul>
+            <li><a href="./Diagram/er_diagram.puml">Entity-Relationship Diagram (.puml)</a></li>
+            <li><a href="./Diagram/data_flow_diagram.puml">Data Flow Diagram (.puml)</a></li>
+            <li><a href="./Diagram/activity_diagram.puml">Activity Diagram (.puml)</a></li>
+            <li><a href="./Diagram/login_activity_diagram.puml">Login Activity Diagram (.puml)</a></li>
+            <li><a href="./Diagram/register_activity_diagram.puml">Register Activity Diagram (.puml)</a></li>
+            <li><a href="./Diagram/oauth_activity_diagram.puml">OAuth Activity Diagram (.puml)</a></li>
+            <li><a href="./Diagram/use_case_diagram.puml">Use Case Diagram (.puml)</a></li>
+        </ul>
+    </div>
+    </div>
+</body>
+</html>

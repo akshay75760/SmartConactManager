@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Contact Manager - Admin Activity Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .diagram-section {
+            margin-bottom: 50px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .diagram-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+        .diagram-content {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .mermaid {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #ff416c;
+        }
+        .feature-card h3 {
+            color: #2c3e50;
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+        }
+        .feature-card ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+        }
+        .feature-card li {
+            margin-bottom: 8px;
+        }
+        .critical {
+            border-left-color: #e74c3c;
+            background: linear-gradient(135deg, #ffe5e5 0%, #fff 100%);
+        }
+        .high {
+            border-left-color: #f39c12;
+            background: linear-gradient(135deg, #fff8e1 0%, #fff 100%);
+        }
+        .medium {
+            border-left-color: #3498db;
+            background: linear-gradient(135deg, #e3f2fd 0%, #fff 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👨‍💼 Admin Activity Diagram</h1>
+            <p>Smart Contact Manager - Administrative Workflows and System Management</p>
+        </div>
+        
+        <div class="content">
+            <!-- Admin Login Flow -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    🔐 Admin Authentication & Login Flow
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            A[Admin Login Page] --> B[Enter Admin Credentials]
+                            B --> C{Validate Credentials}
+                            C -->|Invalid| D[Show Login Error]
+                            C -->|Valid| E{Check Admin Role}
+                            E -->|Not Admin| F[Access Denied]
+                            E -->|Admin| G{2FA Required?}
+                            G -->|No| H[Generate JWT Token]
+                            G -->|Yes| I[Request 2FA Code]
+                            I --> J[Enter 2FA Code]
+                            J --> K{Validate 2FA}
+                            K -->|Invalid| L[Show 2FA Error]
+                            K -->|Valid| H
+                            H --> M[Set Admin Session]
+                            M --> N[Log Admin Login]
+                            N --> O[Redirect to Admin Dashboard]
+                            
+                            D --> B
+                            F --> B
+                            L --> J
+                            
+                            style A fill:#ffe5e5
+                            style O fill:#c8e6c9
+                            style F fill:#ffcdd2
+                            style D fill:#ffcdd2
+                            style L fill:#ffcdd2
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Dashboard - Level 1 Simple -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    📊 Level 1 Admin Dashboard - Simplified Overview
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            START([Admin Login]) --> DASH[📊 Admin Dashboard]
+                            
+                            DASH --> A[👥 User Management]
+                            DASH --> B[⚙️ System Settings]
+                            DASH --> C[🗄️ Database Admin]
+                            DASH --> D[🔒 Security Config]
+                            DASH --> E[💾 Backup Management]
+                            DASH --> F[📈 System Monitor]
+                            DASH --> G[📋 Audit Logs]
+                            
+                            A --> A1[View Users]
+                            A --> A2[Add/Edit Users]
+                            A --> A3[Enable/Disable Users]
+                            A --> A4[User Reports]
+                            
+                            B --> B1[App Configuration]
+                            B --> B2[Database Settings]
+                            B --> B3[Email Configuration]
+                            B --> B4[Feature Toggles]
+                            
+                            C --> C1[Execute Queries]
+                            C --> C2[Table Management]
+                            C --> C3[Performance Monitor]
+                            C --> C4[Index Management]
+                            
+                            D --> D1[Authentication Policies]
+                            D --> D2[Access Control]
+                            D --> D3[Firewall Rules]
+                            D --> D4[Session Management]
+                            
+                            E --> E1[Manual Backup]
+                            E --> E2[Scheduled Backup]
+                            E --> E3[Restore Operations]
+                            E --> E4[Backup Verification]
+                            
+                            F --> F1[System Health]
+                            F --> F2[Resource Usage]
+                            F --> F3[Error Monitoring]
+                            F --> F4[Performance Metrics]
+                            
+                            G --> G1[Activity Logs]
+                            G --> G2[Security Events]
+                            G --> G3[System Changes]
+                            G --> G4[Compliance Reports]
+                            
+                            A1 --> RETURN[Return to Dashboard]
+                            A2 --> RETURN
+                            A3 --> RETURN
+                            A4 --> RETURN
+                            B1 --> RETURN
+                            B2 --> RETURN
+                            B3 --> RETURN
+                            B4 --> RETURN
+                            C1 --> RETURN
+                            C2 --> RETURN
+                            C3 --> RETURN
+                            C4 --> RETURN
+                            D1 --> RETURN
+                            D2 --> RETURN
+                            D3 --> RETURN
+                            D4 --> RETURN
+                            E1 --> RETURN
+                            E2 --> RETURN
+                            E3 --> RETURN
+                            E4 --> RETURN
+                            F1 --> RETURN
+                            F2 --> RETURN
+                            F3 --> RETURN
+                            F4 --> RETURN
+                            G1 --> RETURN
+                            G2 --> RETURN
+                            G3 --> RETURN
+                            G4 --> RETURN
+                            
+                            RETURN --> DASH
+                            DASH --> END([Admin Logout])
+                            
+                            %% Styling
+                            classDef startEnd fill:#ff6b6b,stroke:#d63031,stroke-width:3px,color:#fff
+                            classDef dashboard fill:#0984e3,stroke:#74b9ff,stroke-width:3px,color:#fff
+                            classDef category fill:#00b894,stroke:#00cec9,stroke-width:2px,color:#fff
+                            classDef action fill:#fdcb6e,stroke:#f39c12,stroke-width:2px
+                            classDef return fill:#a29bfe,stroke:#6c5ce7,stroke-width:2px,color:#fff
+                            
+                            class START,END startEnd
+                            class DASH dashboard
+                            class A,B,C,D,E,F,G category
+                            class A1,A2,A3,A4,B1,B2,B3,B4,C1,C2,C3,C4,D1,D2,D3,D4,E1,E2,E3,E4,F1,F2,F3,F4,G1,G2,G3,G4 action
+                            class RETURN return
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple User Management Flow -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    👥 User Management - Level 1 Simplified
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            UM[👥 User Management] --> VIEW[👁️ View All Users]
+                            UM --> SEARCH[🔍 Search Users]
+                            UM --> ADD[➕ Add New User]
+                            UM --> BULK[📦 Bulk Operations]
+                            UM --> EXPORT[📤 Export Users]
+                            UM --> ANALYTICS[📊 User Analytics]
+                            
+                            VIEW --> ACTIONS{User Actions}
+                            ACTIONS --> PROFILE[👤 View Profile]
+                            ACTIONS --> EDIT[✏️ Edit User]
+                            ACTIONS --> TOGGLE[🔄 Enable/Disable]
+                            ACTIONS --> DELETE[🗑️ Delete User]
+                            ACTIONS --> RESET[🔑 Reset Password]
+                            ACTIONS --> ACTIVITY[📈 View Activity]
+                            
+                            SEARCH --> RESULTS[📋 Search Results]
+                            ADD --> FORM[📝 User Form]
+                            FORM --> VALIDATE{Valid Data?}
+                            VALIDATE -->|Yes| CREATE[✅ Create User]
+                            VALIDATE -->|No| ERRORS[❌ Show Errors]
+                            
+                            BULK --> BULKACTIONS{Bulk Actions}
+                            BULKACTIONS --> ENABLE[✅ Enable All]
+                            BULKACTIONS --> DISABLE[❌ Disable All]
+                            BULKACTIONS --> BULKDELETE[🗑️ Delete Selected]
+                            BULKACTIONS --> EMAIL[📧 Email All]
+                            
+                            PROFILE --> BACK[🔙 Back to Users]
+                            EDIT --> BACK
+                            TOGGLE --> BACK
+                            DELETE --> BACK
+                            RESET --> BACK
+                            ACTIVITY --> BACK
+                            RESULTS --> BACK
+                            CREATE --> BACK
+                            ERRORS --> FORM
+                            ENABLE --> BACK
+                            DISABLE --> BACK
+                            BULKDELETE --> BACK
+                            EMAIL --> BACK
+                            EXPORT --> BACK
+                            ANALYTICS --> BACK
+                            
+                            %% Styling
+                            classDef main fill:#ff6b6b,stroke:#d63031,stroke-width:3px,color:#fff
+                            classDef primary fill:#0984e3,stroke:#74b9ff,stroke-width:2px,color:#fff
+                            classDef secondary fill:#00b894,stroke:#00cec9,stroke-width:2px,color:#fff
+                            classDef action fill:#fdcb6e,stroke:#f39c12,stroke-width:2px
+                            classDef decision fill:#e17055,stroke:#d63031,stroke-width:2px,color:#fff
+                            classDef back fill:#a29bfe,stroke:#6c5ce7,stroke-width:2px,color:#fff
+                            
+                            class UM main
+                            class VIEW,SEARCH,ADD,BULK,EXPORT,ANALYTICS primary
+                            class ACTIONS,BULKACTIONS,VALIDATE decision
+                            class PROFILE,EDIT,TOGGLE,DELETE,RESET,ACTIVITY,RESULTS,FORM,CREATE,ENABLE,DISABLE,BULKDELETE,EMAIL secondary
+                            class ERRORS action
+                            class BACK back
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple System Settings -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    ⚙️ System Settings - Level 1 Simplified
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            SS[⚙️ System Settings] --> APP[📱 Application Config]
+                            SS --> DB[🗄️ Database Settings]
+                            SS --> EMAIL[📧 Email Configuration]
+                            SS --> SEC[🔒 Security Settings]
+                            SS --> STORAGE[💾 Storage Settings]
+                            SS --> API[🔌 API Configuration]
+                            SS --> FEATURES[🎛️ Feature Toggles]
+                            
+                            APP --> APP1[Site Configuration]
+                            APP --> APP2[Theme Settings]
+                            APP --> APP3[Language Settings]
+                            
+                            DB --> DB1[Connection Settings]
+                            DB --> DB2[Pool Configuration]
+                            DB --> DB3[Backup Settings]
+                            
+                            EMAIL --> EMAIL1[SMTP Configuration]
+                            EMAIL --> EMAIL2[Email Templates]
+                            EMAIL --> EMAIL3[Delivery Settings]
+                            
+                            SEC --> SEC1[Password Policies]
+                            SEC --> SEC2[Session Timeout]
+                            SEC --> SEC3[2FA Settings]
+                            
+                            STORAGE --> STORAGE1[Upload Limits]
+                            STORAGE --> STORAGE2[Cloud Settings]
+                            STORAGE --> STORAGE3[File Management]
+                            
+                            API --> API1[Rate Limiting]
+                            API --> API2[API Keys]
+                            API --> API3[Third-party Integration]
+                            
+                            FEATURES --> FEATURES1[Enable/Disable Features]
+                            FEATURES --> FEATURES2[Beta Features]
+                            FEATURES --> FEATURES3[Maintenance Mode]
+                            
+                            APP1 --> SAVE[💾 Save Settings]
+                            APP2 --> SAVE
+                            APP3 --> SAVE
+                            DB1 --> SAVE
+                            DB2 --> SAVE
+                            DB3 --> SAVE
+                            EMAIL1 --> SAVE
+                            EMAIL2 --> SAVE
+                            EMAIL3 --> SAVE
+                            SEC1 --> SAVE
+                            SEC2 --> SAVE
+                            SEC3 --> SAVE
+                            STORAGE1 --> SAVE
+                            STORAGE2 --> SAVE
+                            STORAGE3 --> SAVE
+                            API1 --> SAVE
+                            API2 --> SAVE
+                            API3 --> SAVE
+                            FEATURES1 --> SAVE
+                            FEATURES2 --> SAVE
+                            FEATURES3 --> SAVE
+                            
+                            SAVE --> RESTART{Restart Required?}
+                            RESTART -->|Yes| REBOOT[🔄 Restart Services]
+                            RESTART -->|No| SUCCESS[✅ Settings Saved]
+                            REBOOT --> SUCCESS
+                            SUCCESS --> BACK[🔙 Back to Settings]
+                            
+                            %% Styling
+                            classDef main fill:#ff6b6b,stroke:#d63031,stroke-width:3px,color:#fff
+                            classDef category fill:#0984e3,stroke:#74b9ff,stroke-width:2px,color:#fff
+                            classDef setting fill:#00b894,stroke:#00cec9,stroke-width:2px,color:#fff
+                            classDef action fill:#fdcb6e,stroke:#f39c12,stroke-width:2px
+                            classDef decision fill:#e17055,stroke:#d63031,stroke-width:2px,color:#fff
+                            classDef success fill:#00b894,stroke:#00cec9,stroke-width:2px,color:#fff
+                            
+                            class SS main
+                            class APP,DB,EMAIL,SEC,STORAGE,API,FEATURES category
+                            class APP1,APP2,APP3,DB1,DB2,DB3,EMAIL1,EMAIL2,EMAIL3,SEC1,SEC2,SEC3,STORAGE1,STORAGE2,STORAGE3,API1,API2,API3,FEATURES1,FEATURES2,FEATURES3 setting
+                            class SAVE,REBOOT,BACK action
+                            class RESTART decision
+                            class SUCCESS success
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple Database Administration -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    🗄️ Database Administration - Level 1 Simplified
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            DBA[🗄️ Database Admin] --> STATUS[📊 View DB Status]
+                            DBA --> QUERY[💻 Execute Queries]
+                            DBA --> TABLES[📋 Manage Tables]
+                            DBA --> BACKUP[💾 Database Backup]
+                            DBA --> RESTORE[🔄 Database Restore]
+                            DBA --> PERFORMANCE[⚡ Performance Tuning]
+                            DBA --> INDEXES[🔍 Index Management]
+                            
+                            STATUS --> STATUS1[Connection Status]
+                            STATUS --> STATUS2[Table Sizes]
+                            STATUS --> STATUS3[Active Connections]
+                            
+                            QUERY --> QUERY1[SQL Editor]
+                            QUERY --> QUERY2[Query History]
+                            QUERY --> QUERY3[Saved Queries]
+                            
+                            TABLES --> TABLES1[View Table Data]
+                            TABLES --> TABLES2[Edit Schema]
+                            TABLES --> TABLES3[Drop/Truncate]
+                            
+                            BACKUP --> BACKUP1[Full Backup]
+                            BACKUP --> BACKUP2[Incremental Backup]
+                            BACKUP --> BACKUP3[Schema Only]
+                            
+                            RESTORE --> RESTORE1[Select Backup]
+                            RESTORE --> RESTORE2[Point-in-time Recovery]
+                            RESTORE --> RESTORE3[Selective Restore]
+                            
+                            PERFORMANCE --> PERF1[Performance Metrics]
+                            PERFORMANCE --> PERF2[Slow Query Analysis]
+                            PERFORMANCE --> PERF3[Recommendations]
+                            
+                            INDEXES --> INDEX1[Analyze Indexes]
+                            INDEXES --> INDEX2[Create Index]
+                            INDEXES --> INDEX3[Drop/Rebuild Index]
+                            
+                            STATUS1 --> REFRESH[🔄 Refresh Status]
+                            STATUS2 --> REFRESH
+                            STATUS3 --> REFRESH
+                            QUERY1 --> EXECUTE[▶️ Execute Query]
+                            QUERY2 --> EXECUTE
+                            QUERY3 --> EXECUTE
+                            TABLES1 --> APPLY[✅ Apply Changes]
+                            TABLES2 --> APPLY
+                            TABLES3 --> APPLY
+                            BACKUP1 --> PROGRESS[📈 Show Progress]
+                            BACKUP2 --> PROGRESS
+                            BACKUP3 --> PROGRESS
+                            RESTORE1 --> PROGRESS
+                            RESTORE2 --> PROGRESS
+                            RESTORE3 --> PROGRESS
+                            PERF1 --> REPORT[📊 Generate Report]
+                            PERF2 --> REPORT
+                            PERF3 --> REPORT
+                            INDEX1 --> RESULT[📋 Show Results]
+                            INDEX2 --> RESULT
+                            INDEX3 --> RESULT
+                            
+                            REFRESH --> BACK[🔙 Back to DB Admin]
+                            EXECUTE --> BACK
+                            APPLY --> BACK
+                            PROGRESS --> BACK
+                            REPORT --> BACK
+                            RESULT --> BACK
+                            
+                            %% Styling
+                            classDef main fill:#ff6b6b,stroke:#d63031,stroke-width:3px,color:#fff
+                            classDef category fill:#0984e3,stroke:#74b9ff,stroke-width:2px,color:#fff
+                            classDef operation fill:#00b894,stroke:#00cec9,stroke-width:2px,color:#fff
+                            classDef action fill:#fdcb6e,stroke:#f39c12,stroke-width:2px
+                            classDef back fill:#a29bfe,stroke:#6c5ce7,stroke-width:2px,color:#fff
+                            
+                            class DBA main
+                            class STATUS,QUERY,TABLES,BACKUP,RESTORE,PERFORMANCE,INDEXES category
+                            class STATUS1,STATUS2,STATUS3,QUERY1,QUERY2,QUERY3,TABLES1,TABLES2,TABLES3,BACKUP1,BACKUP2,BACKUP3,RESTORE1,RESTORE2,RESTORE3,PERF1,PERF2,PERF3,INDEX1,INDEX2,INDEX3 operation
+                            class REFRESH,EXECUTE,APPLY,PROGRESS,REPORT,RESULT action
+                            class BACK back
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple Security Configuration -->
+            <div class="diagram-section">
+                <div class="diagram-header">
+                    🔒 Security Configuration - Level 1 Simplified
+                </div>
+                <div class="diagram-content">
+                    <div class="mermaid">
+                        flowchart TD
+                            SECURITY[🔒 Security Config] --> AUTH[🔐 Authentication]
+                            SECURITY --> AUTHZ[👮 Authorization]
+                            SECURITY --> CRYPTO[🔑 Encryption]
+                            SECURITY --> FIREWALL[🛡️ Firewall]
+                            SECURITY --> AUDIT[📝 Audit Logs]
+                            SECURITY --> SESSION[🕐 Sessions]
+                            SECURITY --> API[🔌 API Security]
+                            
+                            AUTH --> POLICY[📋 Login Policies]
+                            AUTH --> TFA[🔢 2FA Settings]
+                            AUTH --> PASSWORD[🔒 Password Rules]
+                            
+                            AUTHZ --> ROLES[👤 Role Permissions]
+                            AUTHZ --> RESOURCES[📁 Resource Access]
+                            AUTHZ --> DATA[💾 Data Access]
+                            
+                            CRYPTO --> CIPHER[🔐 Algorithms]
+                            CRYPTO --> KEYS[🗝️ Key Management]
+                            CRYPTO --> SSL[🌐 SSL/TLS]
+                            
+                            FIREWALL --> RULES[📜 Firewall Rules]
+                            FIREWALL --> IPFILTER[🌍 IP Filtering]
+                            FIREWALL --> TESTING[🧪 Test Rules]
+                            
+                            AUDIT --> LEVELS[📊 Log Levels]
+                            AUDIT --> RETENTION[📅 Retention Policy]
+                            AUDIT --> ROTATION[🔄 Log Rotation]
+                            
+                            SESSION --> TIMEOUT[⏰ Session Timeout]
+                            SESSION --> COOKIES[🍪 Cookie Security]
+                            SESSION --> CSRF[🛡️ CSRF Protection]
+                            
+                            API --> LIMITS[🚦 Rate Limits]
+                            API --> APIKEYS[🔑 API Keys]
+                            API --> VALIDATION[✅ Request Validation]
+                            
+                            POLICY --> SAVE[💾 Save Settings]
+                            TFA --> SAVE
+                            PASSWORD --> SAVE
+                            ROLES --> SAVE
+                            RESOURCES --> SAVE
+                            DATA --> SAVE
+                            CIPHER --> SAVE
+                            KEYS --> SAVE
+                            SSL --> SAVE
+                            RULES --> SAVE
+                            IPFILTER --> SAVE
+                            TESTING --> SAVE
+                            LEVELS --> SAVE
+                            RETENTION --> SAVE
+                            ROTATION --> SAVE
+                            TIMEOUT --> SAVE
+                            COOKIES --> SAVE
+                            CSRF --> SAVE
+                            LIMITS --> SAVE
+                            APIKEYS --> SAVE
+                            VALIDATION --> SAVE
+                            
+                            SAVE --> VALIDATE{Valid Config?}
+                            VALIDATE -->|Yes| SUCCESS[✅ Config Saved]
+                            VALIDATE -->|No| ERROR[❌ Show Errors]
+                            SUCCESS --> RETURN[🔙 Back to Security]
+                            ERROR --> RETURN
+                            
+                            %% Styling
+                            classDef main fill:#ff6b6b,stroke:#d63031,stroke-width:3px,color:#fff
+                            classDef category fill:#0984e3,stroke:#74b9ff,stroke-width:2px,color:#fff
+                            classDef setting fill:#00b894,stroke:#00cec9,stroke-width:2px,color:#fff
+                            classDef action fill:#fdcb6e,stroke:#f39c12,stroke-width:2px
+                            classDef decision fill:#e17055,stroke:#d63031,stroke-width:2px,color:#fff
+                            classDef success fill:#00b894,stroke:#00cec9,stroke-width:2px,color:#fff
+                            classDef error fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+                            
+                            class SECURITY main
+                            class AUTH,AUTHZ,CRYPTO,FIREWALL,AUDIT,SESSION,API category
+                            class POLICY,TFA,PASSWORD,ROLES,RESOURCES,DATA,CIPHER,KEYS,SSL,RULES,IPFILTER,TESTING,LEVELS,RETENTION,ROTATION,TIMEOUT,COOKIES,CSRF,LIMITS,APIKEYS,VALIDATION setting
+                            class SAVE,RETURN action
+                            class VALIDATE decision
+                            class SUCCESS success
+                            class ERROR error
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Features Grid -->
+            <div class="features-grid">
+                <div class="feature-card critical">
+                    <h3>🔐 Admin Authentication</h3>
+                    <ul>
+                        <li>Two-Factor Authentication (2FA)</li>
+                        <li>Enhanced Password Requirements</li>
+                        <li>Role-based Access Verification</li>
+                        <li>Session Security Management</li>
+                        <li>Admin Activity Logging</li>
+                        <li>IP Address Restrictions</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card critical">
+                    <h3>👥 User Management</h3>
+                    <ul>
+                        <li>Complete User Lifecycle Management</li>
+                        <li>Bulk User Operations</li>
+                        <li>User Activity Monitoring</li>
+                        <li>Account Status Management</li>
+                        <li>Password Reset Administration</li>
+                        <li>User Data Export/Import</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card critical">
+                    <h3>⚙️ System Configuration</h3>
+                    <ul>
+                        <li>Application Settings Management</li>
+                        <li>Database Configuration</li>
+                        <li>Email System Configuration</li>
+                        <li>Storage Settings</li>
+                        <li>API Configuration</li>
+                        <li>Feature Toggle Control</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card critical">
+                    <h3>🗄️ Database Administration</h3>
+                    <ul>
+                        <li>Direct Database Access</li>
+                        <li>SQL Query Execution</li>
+                        <li>Table Management</li>
+                        <li>Database Backup/Restore</li>
+                        <li>Performance Monitoring</li>
+                        <li>Index Management</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card critical">
+                    <h3>🔒 Security Management</h3>
+                    <ul>
+                        <li>Authentication Policy Configuration</li>
+                        <li>Authorization Rules Management</li>
+                        <li>Encryption Settings</li>
+                        <li>Firewall Configuration</li>
+                        <li>Audit Logging</li>
+                        <li>Session Security</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card high">
+                    <h3>💾 Backup Management</h3>
+                    <ul>
+                        <li>Manual Backup Creation</li>
+                        <li>Scheduled Backup Configuration</li>
+                        <li>Backup Verification</li>
+                        <li>Disaster Recovery</li>
+                        <li>Storage Management</li>
+                        <li>Backup Monitoring</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card high">
+                    <h3>📊 System Monitoring</h3>
+                    <ul>
+                        <li>Real-time System Health</li>
+                        <li>Performance Metrics</li>
+                        <li>Error Monitoring</li>
+                        <li>Resource Usage Tracking</li>
+                        <li>Alert Management</li>
+                        <li>Capacity Planning</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card medium">
+                    <h3>📋 Audit & Compliance</h3>
+                    <ul>
+                        <li>Comprehensive Activity Logging</li>
+                        <li>Security Event Monitoring</li>
+                        <li>Compliance Reporting</li>
+                        <li>Data Access Auditing</li>
+                        <li>Change Management Tracking</li>
+                        <li>Incident Response</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>
