@@ -7,37 +7,18 @@ import com.scm.forms.MessageForm;
 
 public interface EmailService {
     
-    /**
-     * Send email using SMTP
-     * @param messageForm The message form containing email details
-     * @param senderEmail The email of the sender
-     * @return Message entity representing the sent message
-     */
+    // Method for sending registration success emails (simple HTML emails)
+    void sendEmail(String to, String subject, String body);
+    
+    // Method for sending emails with attachments using MessageForm
     Message sendEmail(MessageForm messageForm, String senderEmail);
     
-    /**
-     * Send email with attachments using SMTP
-     * @param messageForm The message form containing email details
-     * @param senderEmail The email of the sender
-     * @param attachments Array of file attachments
-     * @return Message entity representing the sent message
-     */
+    // Method for sending emails with attachments
     Message sendEmailWithAttachments(MessageForm messageForm, String senderEmail, MultipartFile[] attachments);
     
-    /**
-     * Send email using Message entity
-     * @param message The message entity to send
-     * @return boolean indicating success/failure
-     */
+    // Method for sending simple Message entity emails
     boolean sendEmail(Message message);
     
-    /**
-     * Send a simple text email
-     * @param to Recipient email
-     * @param subject Email subject
-     * @param text Email body
-     * @param from Sender email
-     * @return boolean indicating success/failure
-     */
+    // Method for sending simple text emails
     boolean sendSimpleEmail(String to, String subject, String text, String from);
 }

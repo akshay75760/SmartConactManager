@@ -67,9 +67,9 @@ const AdminDashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 mx-4 mt-4">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow">
+      <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
@@ -80,12 +80,20 @@ const AdminDashboardPage = () => {
                 Manage users and view system statistics
               </p>
             </div>
-            <button
-              onClick={logout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
-            >
-              Logout
-            </button>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => navigate('/admin/profile-management')}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+              >
+                Profile Management
+              </button>
+              <button
+                onClick={logout}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -115,6 +123,28 @@ const AdminDashboardPage = () => {
             <p className="text-3xl font-bold text-purple-600">
               {users.filter(user => user.enabled).length}
             </p>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <button
+              onClick={() => navigate('/admin/profile-management')}
+              className="bg-blue-600 hover:bg-blue-700 text-white p-6 rounded-lg text-left transition-colors"
+            >
+              <h3 className="text-lg font-semibold mb-2">Profile Management</h3>
+              <p className="text-blue-100">Manage user profiles and create new users</p>
+            </button>
+            <div className="bg-gray-200 dark:bg-gray-700 p-6 rounded-lg text-left opacity-50">
+              <h3 className="text-lg font-semibold mb-2 text-gray-600 dark:text-gray-400">Contact Analytics</h3>
+              <p className="text-gray-500 dark:text-gray-500">View contact statistics and trends</p>
+            </div>
+            <div className="bg-gray-200 dark:bg-gray-700 p-6 rounded-lg text-left opacity-50">
+              <h3 className="text-lg font-semibold mb-2 text-gray-600 dark:text-gray-400">System Settings</h3>
+              <p className="text-gray-500 dark:text-gray-500">Configure system preferences</p>
+            </div>
           </div>
         </div>
 

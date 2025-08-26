@@ -181,7 +181,7 @@ const DirectMessagePage = () => {
   return (
     <div id="content">
       {user && <UserSidebar loggedInUser={user} />}
-      <div className="sm:pl-64 pt-20" style={{ minHeight: '100vh' }}>
+      <div className="sm:pl-72 pt-20 mx-4 mt-4" style={{ minHeight: '100vh' }}>
         <div className="grid grid-cols-12">
           <div className="col-span-1"></div>
           <div className="col-span-12 md:col-span-10">

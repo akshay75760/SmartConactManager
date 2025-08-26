@@ -177,7 +177,7 @@ const AddContactPage = () => {
   return (
     <div id="content">
       {user && <UserSidebar loggedInUser={user} />}
-      <div className="sm:pl-64 pt-20" style={{ height: '1000px' }}>
+      <div className="sm:pl-72 pt-20 mx-4 mt-4" style={{ height: '1000px' }}>
         <div className="grid grid-cols-12">
           <div className="col-span-3"></div>
           <div className="col-span-12 md:col-span-6">

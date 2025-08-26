@@ -209,7 +209,7 @@ const ExcelPage = () => {
   return (
     <div id="content">
       {user && <UserSidebar loggedInUser={user} />}
-      <div className="sm:pl-64 pt-20 min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="sm:pl-72 pt-20 min-h-screen bg-gray-50 dark:bg-gray-900 mx-4 mt-4">
         <div className="container mx-auto p-6">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6 flex items-center">

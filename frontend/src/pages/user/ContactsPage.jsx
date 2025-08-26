@@ -152,7 +152,7 @@ const ContactsPage = () => {
   return (
     <div id="content">
       {user && <UserSidebar loggedInUser={user} />}
-      <div className="sm:pl-64 pt-20">
+      <div className="sm:pl-72 pt-20 mx-4 mt-4">
         <div className="">
           <h1 className="text-5xl text-center">All Your Contacts</h1>
           <p className="text-center">List of all contacts...</p>

@@ -33,8 +33,52 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.host:}")
     private String mailHost;
     
+    @Value("${spring.mail.username:}")
+    private String mailUsername;
+    
     @Autowired
     private MessageRepo messageRepo;
+    
+    // Method for sending registration success emails (simple HTML emails)
+    @Override
+    public void sendEmail(String to, String subject, String body) {
+        logger.info("🔵 Attempting to send HTML email to: {}", to);
+        
+        // Check if email configuration is available
+        if (mailSender == null || mailHost == null || mailHost.trim().isEmpty()) {
+            logger.warn("⚠️ Email service not configured - skipping email sending");
+            return;
+        }
+        
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true); // true indicates HTML content
+            
+            // Set from address using configured email
+            if (mailUsername != null && !mailUsername.trim().isEmpty()) {
+                helper.setFrom(mailUsername);
+            }
+            
+            mailSender.send(mimeMessage);
+            logger.info("✅ HTML email sent successfully to: {}", to);
+            
+        } catch (MessagingException e) {
+            logger.error("❌ Failed to create HTML email message for: {}, Error: {}", to, e.getMessage());
+            // Don't throw exception for email failures during registration
+            logger.warn("⚠️ Email sending failed but continuing with registration process");
+        } catch (Exception e) {
+            logger.error("❌ Failed to send HTML email to: {}, Error: {}", to, e.getMessage());
+            if (e.getMessage().contains("Authentication failed")) {
+                logger.error("🚨 Email authentication failed. Please check your SMTP credentials in application.properties");
+            }
+            // Don't throw exception for email failures during registration
+            logger.warn("⚠️ Email sending failed but continuing with registration process");
+        }
+    }
     
     @Override
     public Message sendEmail(MessageForm messageForm, String senderEmail) {

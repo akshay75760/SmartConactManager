@@ -20,22 +20,39 @@ const AuthProvider = ({ children }) => {
         const savedUser = localStorage.getItem('user');
         
         if (token && savedUser) {
-          // Validate token with backend
+          console.log('✅ Found stored token and user data');
+          
+          // Set axios authorization header
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          
           try {
-            const response = await axios.post('/api/auth/validate', { token });
-            if (response.data && response.data.token) {
+            // Try to get user profile to validate token
+            const response = await axios.get('/api/user/profile');
+            if (response.data) {
               console.log('✅ Token is valid, user authenticated:', response.data.email);
               setIsAuthenticated(true);
-              setUser(JSON.parse(savedUser));
+              setUser(response.data);
+              // Update localStorage with fresh user data
+              localStorage.setItem('user', JSON.stringify(response.data));
             } else {
               throw new Error('Invalid token response');
             }
           } catch (error) {
-            console.log('❌ Token validation failed, clearing auth data');
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            setIsAuthenticated(false);
-            setUser(null);
+            console.log('❌ Token validation failed:', error.response?.status);
+            // Only clear auth if it's actually a 401 (unauthorized)
+            if (error.response?.status === 401) {
+              console.log('🚨 Token expired or invalid, clearing auth data');
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              delete axios.defaults.headers.common['Authorization'];
+              setIsAuthenticated(false);
+              setUser(null);
+            } else {
+              // For other errors (network, etc), keep user logged in with stored data
+              console.log('⚠️ Network error, using stored user data');
+              setIsAuthenticated(true);
+              setUser(JSON.parse(savedUser));
+            }
           }
         } else {
           console.log('❌ No token or user data found');
@@ -44,8 +61,17 @@ const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('❌ Failed to check authentication:', error);
-        setIsAuthenticated(false);
-        setUser(null);
+        // Don't clear auth data on general errors, might be network issues
+        const savedUser = localStorage.getItem('user');
+        const token = localStorage.getItem('token');
+        if (token && savedUser) {
+          console.log('📦 Using fallback stored user data');
+          setIsAuthenticated(true);
+          setUser(JSON.parse(savedUser));
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
       } finally {
         setLoading(false);
       }
@@ -66,18 +92,26 @@ const AuthProvider = ({ children }) => {
       if (response.data && response.data.token) {
         // Store token and user data in localStorage
         localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify({
+        
+        // Set authorization header for future requests
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        
+        const userData = {
+          userId: response.data.userId,
           email: response.data.email,
           name: response.data.name,
+          phoneNumber: response.data.phoneNumber,
+          about: response.data.about,
+          profilePic: response.data.profilePic,
+          emailVerified: response.data.emailVerified,
+          provider: response.data.provider,
           roleList: response.data.roles || []
-        }));
+        };
+        
+        localStorage.setItem('user', JSON.stringify(userData));
         
         setIsAuthenticated(true);
-        setUser({
-          email: response.data.email,
-          name: response.data.name,
-          roleList: response.data.roles || []
-        });
+        setUser(userData);
         setLoading(false);
         return response.data; // Return response data on success
       } else {
@@ -97,6 +131,9 @@ const AuthProvider = ({ children }) => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       
+      // Clear authorization header
+      delete axios.defaults.headers.common['Authorization'];
+      
       setIsAuthenticated(false);
       setUser(null);
       navigate('/login', { state: { message: { content: 'You have been logged out.', type: 'green' } } });
@@ -105,6 +142,7 @@ const AuthProvider = ({ children }) => {
       // Still clear auth state on error
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      delete axios.defaults.headers.common['Authorization'];
       setIsAuthenticated(false);
       setUser(null);
       navigate('/login', { state: { message: { content: 'Logout completed.', type: 'green' } } });

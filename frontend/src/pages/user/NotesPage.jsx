@@ -121,7 +121,7 @@ const NotesPage = () => {
   return (
     <div id="content">
       {user && <UserSidebar loggedInUser={user} />}
-      <div className="sm:pl-64 pt-20 min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="sm:pl-72 pt-20 min-h-screen bg-gray-50 dark:bg-gray-900 mx-4 mt-4">
         <div className="p-6">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">

@@ -154,7 +154,7 @@ const SearchContactsPage = () => {
   return (
     <div id="content">
       {user && <UserSidebar loggedInUser={user} />}
-      <div className="sm:pl-64 pt-20" style={{ height: '1000px' }}>
+      <div className="sm:pl-72 pt-20 mx-4 mt-4" style={{ height: '1000px' }}>
         <div className="flex justify-center flex-col items-center">
           <h1 className="text-5xl">Search Results</h1>
           <p>{pageInfo.totalElements} results found</p>

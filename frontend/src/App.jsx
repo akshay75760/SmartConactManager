@@ -11,6 +11,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import OAuthSuccessPage from './pages/auth/OAuthSuccessPage';
 import DashboardPage from './pages/user/DashboardPage';
 import ProfilePage from './pages/user/ProfilePage';
+import UserProfile from './pages/user/UserProfile';
 import AddContactPage from './pages/user/AddContactPage';
 import ContactsPage from './pages/user/ContactsPage';
 import UpdateContactPage from './pages/user/UpdateContactPage';
@@ -20,6 +21,7 @@ import NotesPage from './pages/user/NotesPage';
 import AddEditNotePage from './pages/user/AddEditNotePage';
 import ExcelPage from './pages/user/ExcelPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminProfileManagement from './pages/admin/AdminProfileManagement';
 import SuccessPage from './pages/SuccessPage';
 import ErrorPage from './pages/ErrorPage';
 import PrivateRoute from './components/common/PrivateRoute';
@@ -63,6 +65,7 @@ function AppContent() {
           <Route element={<PrivateRoute />}>
             <Route path="/user/dashboard" element={<DashboardPage />} />
             <Route path="/user/profile" element={<ProfilePage />} />
+            <Route path="/user/profile-microservice" element={<UserProfile />} />
             <Route path="/user/contacts/add" element={<AddContactPage />} />
             <Route path="/user/contacts" element={<ContactsPage />} />
             <Route path="/user/contacts/view/:contactId" element={<UpdateContactPage />} />
@@ -77,6 +80,7 @@ function AppContent() {
           {/* Admin Routes */}
           <Route element={<AdminRoute />}>
             <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+            <Route path="/admin/profile-management" element={<AdminProfileManagement />} />
           </Route>
         </Routes>
       </main>

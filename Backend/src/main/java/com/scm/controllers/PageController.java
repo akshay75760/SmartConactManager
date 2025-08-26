@@ -16,8 +16,9 @@ import com.scm.entities.User;
 import com.scm.forms.UserForm;
 import com.scm.helpers.Message;
 import com.scm.helpers.MessageType;
+import com.scm.services.EmailService;
 import com.scm.services.UserService;
-
+import org.springframework.core.env.Environment;
 import jakarta.validation.Valid;
 
 @RestController // Changed to RestController
@@ -26,6 +27,12 @@ public class PageController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private Environment env;
 
     // Home page data - now returns JSON
     @GetMapping("/home")
@@ -120,11 +127,71 @@ public class PageController {
         try {
             userService.saveUser(user); // This will also generate email token and send email
             System.out.println("User saved successfully via API");
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    Message.builder()
-                            .content("Registration Successful! Please check your email to verify your account.")
-                            .type(MessageType.green)
-                            .build());
+
+            // Send welcome email with better error handling
+            try {
+                String emailSubject = "🎉 Welcome to Smart Contact Manager - Registration Successful!";
+                String emailBody = "<!DOCTYPE html>" +
+                        "<html>" +
+                        "<head>" +
+                        "<style>" +
+                        "body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }" +
+                        ".container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }" +
+                        ".header { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 20px; margin-bottom: 30px; }" +
+                        ".content { color: #333; line-height: 1.6; }" +
+                        ".highlight { color: #3498db; font-weight: bold; }" +
+                        ".footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #ecf0f1; text-align: center; color: #7f8c8d; }" +
+                        ".button { display: inline-block; padding: 12px 25px; background-color: #3498db; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }" +
+                        "</style>" +
+                        "</head>" +
+                        "<body>" +
+                        "<div class='container'>" +
+                        "<div class='header'>" +
+                        "<h1>🎉 Welcome to Smart Contact Manager!</h1>" +
+                        "</div>" +
+                        "<div class='content'>" +
+                        "<p>Dear <span class='highlight'>" + user.getName() + "</span>,</p>" +
+                        "<p>Congratulations! Your registration with <strong>Smart Contact Manager</strong> has been completed successfully.</p>" +
+                        "<p>You can now enjoy the following features:</p>" +
+                        "<ul>" +
+                        "<li>📱 Manage your contacts efficiently</li>" +
+                        "<li>🔒 Secure data storage</li>" +
+                        "<li>📧 Integrated email functionality</li>" +
+                        "<li>☁️ Cloud-based image storage</li>" +
+                        "<li>🌐 Access from anywhere, anytime</li>" +
+                        "</ul>" +
+                        "<p>Your account is now ready to use. You can log in using the email address: <span class='highlight'>" + user.getEmail() + "</span></p>" +
+                        "<div style='text-align: center;'>" +
+                        "<a href='http://localhost:5173/login' class='button'>Login to Your Account</a>" +
+                        "</div>" +
+                        "</div>" +
+                        "<div class='footer'>" +
+                        "<p>Thank you for choosing Smart Contact Manager!</p>" +
+                        "<p><strong>SCM Team</strong></p>" +
+                        "<p><small>This is an automated message. Please do not reply to this email.</small></p>" +
+                        "</div>" +
+                        "</div>" +
+                        "</body>" +
+                        "</html>";
+                
+                emailService.sendEmail(user.getEmail(), emailSubject, emailBody);
+                System.out.println("✅ Welcome email sent successfully to: " + user.getEmail());
+                
+                return ResponseEntity.status(HttpStatus.CREATED).body(
+                        Message.builder()
+                                .content("🎉 Registration Successful! Welcome email has been sent to " + user.getEmail())
+                                .type(MessageType.green)
+                                .build());
+                
+            } catch (Exception emailException) {
+                System.err.println("❌ Failed to send welcome email: " + emailException.getMessage());
+                // Continue with registration success even if email fails
+                return ResponseEntity.status(HttpStatus.CREATED).body(
+                        Message.builder()
+                                .content("🎉 Registration Successful! (Note: Welcome email could not be sent due to email configuration issues)")
+                                .type(MessageType.green)
+                                .build());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

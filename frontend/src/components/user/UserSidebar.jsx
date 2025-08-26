@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { initFlowbite } from 'flowbite';
 import { useAuth } from '../../contexts/AuthContext';
 
 const UserSidebar = ({ loggedInUser }) => {
   const { logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     // Initialize Flowbite components
@@ -31,197 +32,234 @@ const UserSidebar = ({ loggedInUser }) => {
     logout();
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
     <>
       <aside
         id="logo-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} sm:translate-x-0`}
+        className={`fixed top-20 left-4 z-30 w-72 h-[calc(100vh-6rem)] transition-all duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} sm:translate-x-0`}
         aria-label="Sidebar"
       >
-        <div className="h-full pt-16 px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-          <Link to="/user/profile" className="flex flex-col items-center ps-2.5 mb-8">
-            <img
-              onError={(e) => e.target.src = 'https://flowbite.com/docs/images/logo.svg'}
-              src={loggedInUser?.profilePic || 'https://flowbite.com/docs/images/logo.svg'}
-              className="h-16 me-3 sm:h-24 shadow-md rounded-full object-cover"
-              alt="Profile"
-            />
-            <span className="text-gray-500 dark:text-gray-300">{loggedInUser?.name || 'User Name'}</span>
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Welcome to SCM</span>
-          </Link>
-          <ul className="space-y-2 font-medium">
-            <li>
-              <Link
-                to="/user/notes"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 21"
-                >
-                  <path d="M3 3v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2zm2 2h12v10H5V5zm2 2v1h8V7H7zm0 3v1h8v-1H7zm0 3v1h5v-1H7z"/>
-                  <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                  <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                </svg>
-                <span className="ms-3">My Notes</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/user/profile"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 18 18"
-                >
-                  <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap"> Profile</span>
-                <span className="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-green-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Manage</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/user/notes/add"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 2a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H3a1 1 0 1 1 0-2h6V3a1 1 0 0 1 1-1z"/>
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Add Note</span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-green-800 bg-green-100 rounded-full dark:bg-green-900 dark:text-green-300">+</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/user/contacts/add"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <i className="fa-solid fa-plus h-5 w-5"></i>
-                <span className="flex-1 ms-3 whitespace-nowrap">Add Contact</span>
-                <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/user/contacts"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <i className="fa-regular fa-address-book h-5 w-5"></i>
-                <span className="flex-1 ms-3 whitespace-nowrap">Contacts</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/user/excel"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <i className="fa-solid fa-file-excel h-5 w-5 text-green-600"></i>
-                <span className="flex-1 ms-3 whitespace-nowrap">Import/Export</span>
-                <span className="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-green-800 bg-green-100 rounded-full dark:bg-green-900 dark:text-green-300">Excel</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/user/direct-message"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 18 20"
-                >
-                  <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Direct Message</span>
-              </Link>
-            </li>
-            
-            {/* Admin Dashboard Link - Only show for admin users */}
-            {loggedInUser?.roleList?.includes('ROLE_ADMIN') && (
-              <li>
+        <div className="h-full flex flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg">
+          {/* Header Section */}
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <Link to="/user/profile" className="flex flex-col items-center group">
+              <div className="relative">
+                <img
+                  onError={(e) => e.target.src = 'https://flowbite.com/docs/images/logo.svg'}
+                  src={loggedInUser?.profilePic || 'https://flowbite.com/docs/images/logo.svg'}
+                  className="h-16 w-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600 shadow-md transition-transform duration-200 group-hover:scale-105"
+                  alt="Profile"
+                />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></div>
+              </div>
+              <div className="mt-3 text-center">
+                <h3 className="text-gray-900 dark:text-white font-semibold text-base">{loggedInUser?.name || 'User Name'}</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Welcome to SCM</p>
+              </div>
+            </Link>
+          </div>
+
+          {/* Navigation Section */}
+          <div className="flex-1 px-4 py-4 overflow-y-auto">
+            <nav className="space-y-1">
+              {/* Personal Section */}
+              <div className="mb-4">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 px-2">Personal</p>
+                
                 <Link
-                  to="/admin/dashboard"
-                  className="flex items-center p-2 text-purple-700 rounded-lg dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/20 group font-semibold"
+                  to="/user/notes"
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                    isActive('/user/notes') 
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' 
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`}
                 >
-                  <svg
-                    className="flex-shrink-0 w-5 h-5 text-purple-500 transition duration-75 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm4.5 14.5h-9a.5.5 0 0 1-.5-.5V6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5z"/>
+                  <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2v1a1 1 0 002 0V3a2 2 0 012 2v6.5a1.5 1.5 0 01-.44 1.06l-3 3a1.5 1.5 0 01-2.12 0l-3-3A1.5 1.5 0 014 11.5V5zm3 2.5a.5.5 0 01.5-.5h1a.5.5 0 010 1h-1a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h1a.5.5 0 010 1h-1a.5.5 0 01-.5-.5z" clipRule="evenodd"/>
                   </svg>
-                  <span className="flex-1 ms-3 whitespace-nowrap">Admin Dashboard</span>
+                  <span className="font-medium">My Notes</span>
                 </Link>
-              </li>
-            )}
-            
-            <li>
+
+                <Link
+                  to="/user/profile"
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                    isActive('/user/profile') 
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' 
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"/>
+                  </svg>
+                  <span className="font-medium">Profile (Legacy)</span>
+                  <span className="ml-auto text-xs text-orange-500 bg-orange-100 dark:bg-orange-900/20 px-1.5 py-0.5 rounded">Old</span>
+                </Link>
+
+                <Link
+                  to="/user/profile-microservice"
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                    isActive('/user/profile-microservice') 
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' 
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                    <path d="M6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                  </svg>
+                  <span className="font-medium">Profile (Microservice)</span>
+                  <span className="ml-auto text-xs text-green-500 bg-green-100 dark:bg-green-900/20 px-1.5 py-0.5 rounded">New</span>
+                </Link>
+              </div>
+
+              {/* Actions Section */}
+              <div className="mb-4">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 px-2">Actions</p>
+                
+                <Link
+                  to="/user/notes/add"
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                    isActive('/user/notes/add') 
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' 
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd"/>
+                  </svg>
+                  <span className="font-medium">Add Note</span>
+                </Link>
+
+                <Link
+                  to="/user/contacts/add"
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                    isActive('/user/contacts/add') 
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' 
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <i className="fa-solid fa-user-plus w-4 h-4 mr-3"></i>
+                  <span className="font-medium">Add Contact</span>
+                </Link>
+              </div>
+
+              {/* Management Section */}
+              <div className="mb-4">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 px-2">Management</p>
+                
+                <Link
+                  to="/user/contacts"
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                    isActive('/user/contacts') 
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' 
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <i className="fa-regular fa-address-book w-4 h-4 mr-3"></i>
+                  <span className="font-medium">Contacts</span>
+                </Link>
+
+                <Link
+                  to="/user/excel"
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                    isActive('/user/excel') 
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' 
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <i className="fa-solid fa-file-excel w-4 h-4 mr-3 text-green-600"></i>
+                  <span className="font-medium">Import/Export</span>
+                  <span className="ml-auto text-xs text-green-500 bg-green-100 dark:bg-green-900/20 px-1.5 py-0.5 rounded">Excel</span>
+                </Link>
+
+                <Link
+                  to="/user/direct-message"
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                    isActive('/user/direct-message') 
+                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300' 
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                  </svg>
+                  <span className="font-medium">Direct Message</span>
+                </Link>
+              </div>
+
+              {/* Admin Section - Only show for admin users */}
+              {loggedInUser?.roleList?.includes('ROLE_ADMIN') && (
+                <div className="mb-4">
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2 px-2">Administration</p>
+                  
+                  <Link
+                    to="/admin/dashboard"
+                    className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                      isActive('/admin/dashboard') 
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300' 
+                        : 'text-purple-600 hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-900/20'
+                    }`}
+                  >
+                    <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"/>
+                    </svg>
+                    <span className="font-medium">Admin Dashboard</span>
+                  </Link>
+
+                  <Link
+                    to="/admin/profile-management"
+                    className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors duration-150 ${
+                      isActive('/admin/profile-management') 
+                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300' 
+                        : 'text-purple-600 hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-900/20'
+                    }`}
+                  >
+                    <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    <span className="font-medium">Profile Management</span>
+                  </Link>
+                </div>
+              )}
+            </nav>
+          </div>
+
+          {/* Bottom Section - Help & Logout */}
+          <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 mt-auto">
+            <div className="space-y-1">
+              <button
+                onClick={() => alert('Help documentation coming soon!')}
+                className="w-full flex items-center px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors duration-150"
+              >
+                <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd"/>
+                </svg>
+                <span className="font-medium">Help & Support</span>
+              </button>
+
               <button
                 onClick={handleLogout}
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group w-full"
+                className="w-full flex items-center px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors duration-150"
               >
-                <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
-                  />
+                <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
+                <span className="font-medium">Logout</span>
               </button>
-            </li>
-            <li>
-              <Link
-                to="#"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <svg
-                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z" />
-                  <path d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z" />
-                  <path d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z" />
-                </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Feedback</span>
-              </Link>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </aside>
+      
       {/* Overlay for small screens when sidebar is open */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-gray-900/50 dark:bg-gray-900/80 z-30 sm:hidden"
+          className="fixed inset-0 bg-gray-900/50 dark:bg-gray-900/80 z-20 sm:hidden backdrop-blur-sm"
           onClick={() => setIsSidebarOpen(false)}
         ></div>
       )}

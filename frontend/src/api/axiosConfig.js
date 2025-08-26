@@ -27,12 +27,22 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // If a 401 Unauthorized response is received, clear token and redirect to login
+    // If a 401 Unauthorized response is received, clear token
     if (error.response && error.response.status === 401) {
+      console.log('🚨 Received 401, clearing authentication data');
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // You might want to redirect to login page
-      // window.location.href = '/login'; // Or use navigate from react-router-dom
+      delete instance.defaults.headers.common['Authorization'];
+      
+      // Only redirect if we're not already on login page
+      if (window.location.pathname !== '/login') {
+        // Use a gentle redirect with a delay to avoid immediate redirects
+        setTimeout(() => {
+          if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+          }
+        }, 1000);
+      }
     }
     return Promise.reject(error);
   }
